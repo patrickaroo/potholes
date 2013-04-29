@@ -31,7 +31,7 @@ if ('development' == app.get('env')) {
 
 
 app.get('/findPotholesByLoc', search.byLoc);
-// app.get('/findPotholesByAddress', search.byAddress);
+app.get('/findPotholesByAddress', search.byAddress);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+       * { box-sizing: border-box; }
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 150px;
+                    margin-top: 30px;
+                    border: 1px solid #B3AAAD
+                    }
+    </style>
+<link rel="stylesheet" href="stylesheets/jquery.mobile-1.3.1.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWln2dRAZdaTj1VbGrbD-YEZ0_xLpwILw&sensor=false"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+</head>
+<body>
+<div id="map-canvas" />
+<div id="list-container" />
+</body>
+<script type="text/javascript">
+function initialize(userPos, potholes) {
+    var userLatLng = new google.maps.LatLng(userPos.coords.latitude, userPos.coords.longitude);
+
+    var mapOptions = {
+        center: userLatLng,
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+		streetViewControl: false
+    };
+
+    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    var placeMarkers = function() {
+        for(var i=0;i<potholes.length;i++) {
+            var marker = new google.maps.Marker({  position: new google.maps.LatLng(potholes[i].LATITUDE, potholes[i].Longitude),  map: map  });
+            console.log(potholes[i].LATITUDE, potholes[i].Longitude);
+        }
+    }
+
+    placeMarkers();
+
+    var usrMarker = new google.maps.Marker({
+        position: userLatLng,
+        map: map,
+        icon: 'http://maps.google.com/mapfiles/arrow.png'
+    });
+
+}
+
+function drawListView(res){
+    var ul = $('<ul data-role="list-view">');
+
+    for(var i =0, ii = res.length; i < ii; i++){
+        ul.append('<li>'+res[i].Address+'</li>');
+    }
+    ul.appendTo(document.body);
+}
+
+$(function(){
+
+    navigator.geolocation.getCurrentPosition(function(pos){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/findPotholesByLoc?lat='+pos.coords.latitude+'&lng='+pos.coords.longitude);
+        xhr.onload = function(){
+            console.log(this.responseText);
+
+            var res = JSON.parse(this.responseText);
+            initialize(pos, res);
+
+            drawListView(res);
+        };
+        xhr.send();
+    });
+});
+
+</script>
+</html>

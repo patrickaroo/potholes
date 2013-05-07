@@ -22,21 +22,23 @@
 <div id="list-container" />
 </body>
 <script type="text/javascript">
+
 function initialize(userPos, potholes) {
     var userLatLng = new google.maps.LatLng(userPos.coords.latitude, userPos.coords.longitude);
 
     var mapOptions = {
         center: userLatLng,
-        zoom: 16,
+        zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
 		streetViewControl: false
     };
 
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
     var placeMarkers = function() {
         for(var i=0;i<potholes.length;i++) {
-            var marker = new google.maps.Marker({  position: new google.maps.LatLng(potholes[i].LATITUDE, potholes[i].Longitude),  map: map  });
-            console.log(potholes[i].LATITUDE, potholes[i].Longitude);
+            var marker = new google.maps.Marker({  position: new google.maps.LatLng(potholes[i].Latitude, potholes[i].Longitude),  map: map  });
+            console.log(potholes[i].Latitude, potholes[i].Longitude);
         }
     }
 
@@ -62,8 +64,8 @@ function drawListView(res){
 $(function(){
 
     navigator.geolocation.getCurrentPosition(function(pos){
-
         var xhr = new XMLHttpRequest();
+		console.log(pos.coords.latitude);
         xhr.open('GET', '/findPotholesByLoc?lat='+pos.coords.latitude+'&lng='+pos.coords.longitude);
         xhr.onload = function(){
             console.log(this.responseText);

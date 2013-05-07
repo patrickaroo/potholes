@@ -11,7 +11,7 @@ var express = require('express')
   , mongoose = require('mongoose');
 
 var app = express();
-mongoose.connect('localhost', 'potholedata');
+mongoose.connect('localhost', 'potholesdata');
 
 // all environments
 app.set('port', process.env.PORT || 3000);

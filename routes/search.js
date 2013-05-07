@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var PotholeSchema = new mongoose.Schema({
-        ADDRESS: String,
+        STREETADDRESS: String,
         LATITUDE: String,
         LONGITUDE: String
     },
@@ -15,7 +15,8 @@ var Pothole = mongoose.model('pothole', PotholeSchema);
 exports.byLoc = function(req, res){
     console.log(req.query.lat, req.query.lng);
     return Pothole.find({
-            loc: { $nearSphere:[ req.query.lng, req.query.lat ], $maxDistance: 100}
+            // loc: { $nearSphere:[ req.query.lng, req.query.lat ], $maxDistance: 100}
+            LOCATION: { $nearSphere:[ req.query.lng, req.query.lat ], $maxDistance: 10000}
             }).limit(5).execFind(function(err, pothole){
             console.log('here', pothole);
             res.send(pothole);
